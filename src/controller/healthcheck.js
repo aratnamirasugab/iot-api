@@ -5,6 +5,6 @@ const {response} = require('../context/response');
 exports.healthcheck = function (req, res) {
     return response({
         "code" : 200,
-        "message" : "Middleman project, powered by Nodejs!"
+        "message" : "IOT Smart Waterpot project, powered by Nodejs!"
     }, res);
 };
