@@ -76,14 +76,55 @@ exports.deactived = async function (req, res) {
             }, res);
         }
 
-        let deactive = await service.deactived(userDTO);
-        let dataToResponse = deactive;
+        let dataToResponse = await service.deactived(userDTO);
+        
+        if (typeof(dataToResponse.code) !== undefined && dataToResponse.code === 500) {
+            return response({
+                code : dataToResponse.code,
+                message : dataToResponse.message
+            }, res);
+        }
 
         return response({
             code : dataToResponse.code,
             message : dataToResponse.message
         }, res);
     } catch (error) {
+        return response({
+            "code" : 500,
+            "message" : error
+        }, res);
+    }
+}
+
+exports.changePassword = async function (req, res) {
+    
+    let DTO = req.body;
+    let userDTO = req.user;
+
+    try {
+        let dataToResponse = await service.changePassword(DTO, userDTO);
+
+        if (typeof(dataToResponse.code) !== undefined && dataToResponse.code === 403) {
+            return response({
+                code : dataToResponse.code,
+                message : dataToResponse.message
+            }, res);
+        }
+
+        if (typeof(dataToResponse.code) !== undefined && dataToResponse.code === 500) {
+            return response({
+                code : dataToResponse.code,
+                message : dataToResponse.message
+            }, res);
+        }
+
+        return response({
+            code : dataToResponse.code,
+            message : dataToResponse.message
+        }, res);
+    } catch (error) {
+        console.log(error)
         return response({
             "code" : 500,
             "message" : error

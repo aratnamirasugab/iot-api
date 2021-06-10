@@ -53,3 +53,26 @@ exports.deactived = async function (userDTO) {
         });
     });
 }
+
+exports.changePassword = async function (DTO, userDTO) {
+    
+    let query = `
+        UPDATE user
+        SET
+            password = ?,
+            updated_at = ?
+        WHERE
+            email = ?
+    `
+
+    let values = [
+        DTO.new_password, generateCurrentTime(), userDTO.email
+    ]
+
+    return new Promise(function(resolve, reject) {
+        db.query(query, values, function(error, rows, fields) {
+            if (error) reject(error);
+            resolve(rows);
+        })
+    })
+}

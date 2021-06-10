@@ -75,3 +75,31 @@ exports.deactived = async function (userDTO) {
         message : "Successfully deactived the account"
     }
 }
+
+exports.changePassword = async function (DTO, userDTO) {
+
+    let dataUser = await repository.checkUserByEmail(userDTO.email);
+    let compPasswd = await comparePassword(DTO.old_password, dataUser[0].password);
+    
+    if (!compPasswd) {
+        return {
+            code : 403,
+            message : "Wrong Credentials"
+        }
+    }
+
+    DTO.new_password = await hashPassword(DTO.new_password);
+    let resultFromDB = await repository.changePassword(DTO, userDTO);
+    
+    if (resultFromDB.affectedRows === 0) {
+        return {
+            code : 500,
+            message : "Failed to change user password"
+        }
+    }
+
+    return {
+        code : 200,
+        message : "Successfully change user password"
+    }
+}
