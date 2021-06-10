@@ -2,6 +2,7 @@
 
 const repository = require('../repository/credentials');
 const {hashPassword, comparePassword} = require('../helpers/bcrypt');
+const {generateAccessToken} = require('../middleware/jwt');
 
 
 exports.register = async function(DTO) {
