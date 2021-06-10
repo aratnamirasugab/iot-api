@@ -130,7 +130,7 @@ Response :
 ## [PUT] Change Password
 Request :
 - Method : PUT
-- Endpoint : `/api/credentials//edit/password`
+- Endpoint : `/api/credentials/edit/password`
 - Header :
     - Authorization : "Bearer " + token
     - Content-Type: application/json
