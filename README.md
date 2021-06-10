@@ -13,7 +13,7 @@ IOT Smart Waterpot is an IOT project of which helps people to simplify their pla
 
 ## Diagrams 
 - Sequence : TBA
-- ERD : Refer to this [Link](https://drive.google.com/file/d/11Ml4SSkM-8qtWuvpWOEQSd6d9xDKr-k9/view?usp=sharing)
+- ERD : Refer to this [Link](https://dbdiagram.io/d/60c096260c1ff875fcd4167b)
 - Activity : TBA
 
 #
