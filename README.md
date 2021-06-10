@@ -44,7 +44,7 @@ Response :
 ## [POST] Register
 Request :
 - Method : POST
-- Endpoint : `/api/register`
+- Endpoint : `/api/credentials/register`
 - Header :
     - Content-Type: application/json
     - Accept: application/json
@@ -52,7 +52,7 @@ Request :
     
 ```json 
 {
-    "username" : "string",
+    "name" : "string",
     "email" : "string",
     "password" : "string"
 }
@@ -73,7 +73,7 @@ Response :
 ## [POST] Login
 Request :
 - Method : POST
-- Endpoint : `/api/login`
+- Endpoint : `/api/credentials/login`
 - Header :
     - Content-Type: application/json
     - Accept: application/json
@@ -102,7 +102,7 @@ Response :
 ## [DELETE] De-actived account
 Request :
 - Method : DELETE
-- Endpoint : `/api/profile/de-actived`
+- Endpoint : `/api/credentials/de-actived`
 - Header :
     - Authorization: "Bearer " + token
     - Content-Type: application/json
@@ -130,7 +130,7 @@ Response :
 ## [PUT] Change Password
 Request :
 - Method : PUT
-- Endpoint : `/api/profile/edit/password`
+- Endpoint : `/api/credentials//edit/password`
 - Header :
     - Authorization : "Bearer " + token
     - Content-Type: application/json

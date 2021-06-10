@@ -1,6 +1,7 @@
 "use strict";
 
 const service = require('../service/credentials');
+const {response} = require('../context/response');
 
 exports.register = async function (req, res) {
 
@@ -53,6 +54,34 @@ exports.login = async function (req, res) {
             "code" : 200,
             "message" : "Successfully login",
             "token" : dataToResponse.token
+        }, res);
+    } catch (error) {
+        return response({
+            "code" : 500,
+            "message" : error
+        }, res);
+    }
+}
+
+exports.deactived = async function (req, res) {
+
+    let DTO = req.body;
+    let userDTO = req.user;
+
+    try {
+        if (!DTO.agree) {
+            return response({
+                code : 200,
+                message : "Thank you for staying with us!"
+            }, res);
+        }
+
+        let deactive = await service.deactived(userDTO);
+        let dataToResponse = deactive;
+
+        return response({
+            code : dataToResponse.code,
+            message : dataToResponse.message
         }, res);
     } catch (error) {
         return response({

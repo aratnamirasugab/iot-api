@@ -30,3 +30,26 @@ exports.checkUserByEmail = async function (DTO) {
         });
     });
 }
+
+exports.deactived = async function (userDTO) {
+
+    let query = `
+        UPDATE user
+        SET
+            deleted_at = ?,
+            updated_at = ?
+        WHERE
+            email = ?
+    `
+
+    let values = [
+        generateCurrentTime(), generateCurrentTime(), userDTO.email
+    ];
+
+    return new Promise(function(resolve, reject) {
+        db.query(query, values, function(error, rows, fields) {
+            if (error) reject(error);
+            resolve(rows);    
+        });
+    });
+}
