@@ -155,7 +155,7 @@ Response :
 }
 ```
 
-# --- User Section ---
+# --- Profile Section ---
 ## [GET] Profile Info
 Request :
 - Method : GET

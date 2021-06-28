@@ -52,3 +52,30 @@ exports.addAdress = async function (DTO, userDTO) {
         })
     })
 }
+
+exports.addProfilePicture = async function (DTO, userDTO) {
+
+    let query = `
+        INSERT INTO user_detail(
+            user_id, avatar, created_at
+        )
+        VALUES(
+            ?,?,?
+        )
+        ON DUPLICATE KEY
+        UPDATE
+            avatar = ?, updated_at = ?
+    `
+
+    let values = [
+        userDTO.id, DTO.filename, generateCurrentTime(),
+        DTO.filename, generateCurrentTime()
+    ];
+    
+    return new Promise(function(resolve, reject) {
+        db.query(query, values, function(error, rows, fields) {
+            if (error) reject(error)
+            resolve(rows);            
+        })
+    })
+}

@@ -48,3 +48,25 @@ exports.addAddress = async function (req, res) {
         }, res);
     }
 }
+
+exports.addProfilePicture = async function (req, res) {
+    
+    let DTO = req.body;
+    let userDTO = req.user;
+
+    try {
+        let dataToResponse = await service.addProfilePicture(DTO, userDTO);
+        
+
+        return response({
+            code : dataToResponse.code,
+            message : dataToResponse.message
+        }, res);
+    } catch (error) {
+        console.log(error)
+        return response({
+            code : 500,
+            message : error
+        }, res);
+    }
+}

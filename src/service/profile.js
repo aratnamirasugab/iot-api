@@ -31,17 +31,38 @@ exports.addAddress = async function (DTO, userDTO) {
     if (addressToDB.affectedRows === 2) {
         return {
             code : 200,
-            message : "Successfully added address"
+            message : "Successfully updated address"
         }
     } else if (addressToDB.affectedRows === 1) {
         return {
             code : 200,
-            message : "Successfully updated address"
+            message : "Successfully added address"
         }
     } else {
         return {
             code : 500,
             message : "There was a problem when executing address route"
+        }
+    }
+}
+
+exports.addProfilePicture = async function (DTO, userDTO) {
+
+    let profilePictureToDB = await repository.addProfilePicture(DTO, userDTO)
+    if (profilePictureToDB.affectedRows === 2) {
+        return {
+            code : 200,
+            message : "Successfully updated profile picture"
+        }
+    } else if (profilePictureToDB.affectedRows === 1) {
+        return {
+            code : 200,
+            message : "Successfully added profile picture"
+        }
+    } else {
+        return {
+            code : 500,
+            message : "There was a problem when executing add profile picture route"
         }
     }
 }
