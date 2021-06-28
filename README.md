@@ -169,13 +169,16 @@ Response :
 
 ```json 
 {
-    "code" : "number",
-    "status" : "string",
-    "data" : {
-        "name" : "string",
-        "avatar" : "string",
-        "joined_on" : "string",
-        "email" : "string"
+    "code": "number",
+    "status": "string",
+    "data": {
+        "message": "string",
+        "user_info": {
+            "name": "string",
+            "avatar": "string",
+            "joined_on": "string",
+            "email": "string"
+        }
     }
 }
 ```
@@ -190,7 +193,7 @@ Request :
 - Form-Data :
 ```
 {
-    "avatar" : "filelocation"
+    "profile_picture" : "filelocation"
 } 
 ```
 

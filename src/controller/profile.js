@@ -56,14 +56,33 @@ exports.addProfilePicture = async function (req, res) {
 
     try {
         let dataToResponse = await service.addProfilePicture(DTO, userDTO);
-        
 
         return response({
             code : dataToResponse.code,
             message : dataToResponse.message
         }, res);
     } catch (error) {
-        console.log(error)
+        return response({
+            code : 500,
+            message : error
+        }, res);
+    }
+}
+
+exports.getProfileInfo = async function (req, res) {
+
+    let userDTO = req.user;
+
+    try {
+        let dataToResponse = await service.getProfileInfo(userDTO);
+
+        return response({
+            code : dataToResponse.code,
+            message : dataToResponse.message,
+            user_info : dataToResponse.user_info
+        }, res);
+    } catch (error) {
+        console.log(error);
         return response({
             code : 500,
             message : error

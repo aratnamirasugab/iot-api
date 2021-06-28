@@ -2,7 +2,7 @@
 
 const {healthcheck} = require('./controller/healthcheck');
 const {register, login, deactived, changePassword} = require('./controller/credentials');
-const {addPhoneNumber, addAddress, addProfilePicture} = require('./controller/profile');
+const {addPhoneNumber, addAddress, addProfilePicture, getProfileInfo} = require('./controller/profile');
 const {auth} = require('./middleware/auth');
 const {upload} = require('./middleware/multer');
 
@@ -14,6 +14,7 @@ module.exports = function (app) {
     app.delete('/api/credentials/de-actived', auth, deactived);
     app.put('/api/credentials/edit/password', auth, changePassword);
 
+    app.get('/api/profile', auth, getProfileInfo);
     app.post('/api/profile/edit/phone_number', auth, addPhoneNumber);
     app.post('/api/profile/edit/address', auth, addAddress);
     app.post('/api/profile/upload/avatar', auth, upload.single('profile_avatar'), addProfilePicture);

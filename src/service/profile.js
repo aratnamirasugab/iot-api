@@ -66,3 +66,26 @@ exports.addProfilePicture = async function (DTO, userDTO) {
         }
     }
 }
+
+exports.getProfileInfo = async function (userDTO) {
+
+    let resultFromDB = await repository.getProfileInfo(userDTO);
+
+    if (resultFromDB.length === 1) {
+        return {
+            code : 200,
+            message : "Successfully pull user's data info",
+            user_info : {
+                "name" : resultFromDB[0].name,
+                "avatar" : resultFromDB[0].avatar,
+                "joined_on" : resultFromDB[0].created_at,
+                "email" : resultFromDB[0].email
+            }
+        }
+    } else {
+        return {
+            code : 500,
+            message : "Failed to get user's info data"
+        }
+    }
+}

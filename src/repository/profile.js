@@ -79,3 +79,28 @@ exports.addProfilePicture = async function (DTO, userDTO) {
         })
     })
 }
+
+exports.getProfileInfo = async function (userDTO) {
+
+    let query = `
+        SELECT
+            u.id, u.name, u.email, u.created_at,
+            ud.address, ud.phone_number, ud.avatar
+        FROM
+            user u
+            INNER JOIN user_detail ud ON u.id = ud.user_id
+        WHERE u.id = ?
+        LIMIT 1;
+    `
+
+    let values = [
+        userDTO.id
+    ]
+    
+    return new Promise(function(resolve, reject) {
+        db.query(query, values, function(error, rows, fields) {
+            if (error) reject(error)
+            resolve(rows);            
+        })
+    })
+}
