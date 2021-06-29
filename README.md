@@ -8,6 +8,22 @@ IOT Smart Waterpot is an IOT project of which helps people to simplify their pla
 - Make sure Nodejs is installed on your computer/Raspberry we will stick to Nodejs version 10 LTS
 
 
+## Error that frequently happens when executing the code:
+- message: 'Error: Permission denied, cannot open /dev/ttyACM0', Please change your USB access permission from terminal, because we're using Ubuntu as our development OS, here's the steps that you should be doing to fix the problem:
+1. go to dir  /etc/udev/rules.d/
+2. create file called 50-myusb.rules
+3. add this line to the file and save
+KERNEL=”ttyACM[0-9]*”,MODE=”0666″
+4. restart your server
+5. if problem persist, restart your computer and re-run the code
+
+- Solution 2:
+1. change permission on /dev/ttyACM0
+2. $ sudo usermod -a -G <group_name> <username>
+3. $ sudo chmod a+rw /dev/ttyACM0
+
+usually ubuntu group name is dialout
+
 ## High Level Design
 - Refer to this [Link](https://drive.google.com/file/d/1s24LmhADNQQq-smCoZ5xY6oFJUkGI9k9/view?usp=sharing)
 
