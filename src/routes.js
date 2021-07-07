@@ -18,8 +18,8 @@ module.exports = function (app) {
     app.get('/api/profile', auth, getProfileInfo);
     app.post('/api/profile/edit/phone_number', auth, addPhoneNumber);
     app.post('/api/profile/edit/address', auth, addAddress);
-    app.post('/api/profile/upload/avatar', auth, upload.single('profile_avatar'), addProfilePicture);
+    app.post('/api/profile/upload/avatar', auth, upload.single('profile-avatar'), addProfilePicture);
 
-    app.get('/api/plants/status', auth, getPlantsStatus);
+    // app.get('/api/plants/status', auth, getPlantsStatus);
 
 };

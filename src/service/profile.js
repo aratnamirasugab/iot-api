@@ -1,6 +1,8 @@
 "use strict";
 
 const repository = require('../repository/profile')
+const envs = require('../../config');
+const profileAvatarRoute = envs.BASE_URL + '/api/profile/download/avatar';
 
 exports.addPhoneNumber = async function (DTO, userDTO) {
 
@@ -77,7 +79,7 @@ exports.getProfileInfo = async function (userDTO) {
             message : "Successfully pull user's data info",
             user_info : {
                 "name" : resultFromDB[0].name,
-                "avatar" : resultFromDB[0].avatar,
+                "avatar" : profileAvatarRoute + "/" + resultFromDB[0].avatar,
                 "joined_on" : resultFromDB[0].created_at,
                 "email" : resultFromDB[0].email
             }

@@ -23,8 +23,12 @@ exports.checkUserByEmail = async function (DTO) {
 
     let query = "SELECT * FROM user WHERE email = ?";
 
+    let values = [
+        DTO.email
+    ]
+
     return new Promise(function(resolve, reject) {
-        db.query(query, DTO, function(error, rows, fields){
+        db.query(query, values, function(error, rows, fields){
             if (error) reject(error);
             resolve(rows);
         });

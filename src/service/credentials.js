@@ -33,10 +33,8 @@ exports.register = async function(DTO) {
 }
 
 exports.login = async function (DTO) {
-    
-    let emailOnly = DTO.email;
 
-    let checkUserAlreadyRegistered = await repository.checkUserByEmail(emailOnly);
+    let checkUserAlreadyRegistered = await repository.checkUserByEmail(DTO);
     if (!checkUserAlreadyRegistered) {
         return {
             code : 404,
@@ -78,7 +76,15 @@ exports.deactived = async function (userDTO) {
 
 exports.changePassword = async function (DTO, userDTO) {
 
-    let dataUser = await repository.checkUserByEmail(userDTO.email);
+    let dataUser = await repository.checkUserByEmail(userDTO);
+
+    if (dataUser.length === 0) {
+        return {
+            code : 403,
+            message : "Wrong Credentials"
+        }
+    }
+
     let compPasswd = await comparePassword(DTO.old_password, dataUser[0].password);
     
     if (!compPasswd) {
