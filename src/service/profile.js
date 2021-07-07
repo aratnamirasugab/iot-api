@@ -73,15 +73,17 @@ exports.getProfileInfo = async function (userDTO) {
 
     let resultFromDB = await repository.getProfileInfo(userDTO);
 
-    if (resultFromDB.length === 1) {
+    if (resultFromDB) {
         return {
             code : 200,
             message : "Successfully pull user's data info",
             user_info : {
-                "name" : resultFromDB[0].name,
-                "avatar" : profileAvatarRoute + "/" + resultFromDB[0].avatar,
-                "joined_on" : resultFromDB[0].created_at,
-                "email" : resultFromDB[0].email
+                "name" : resultFromDB.name,
+                "avatar" : profileAvatarRoute + "/" + resultFromDB.avatar,
+                "joined_on" : resultFromDB.created_at,
+                "email" : resultFromDB.email,
+                "address" : resultFromDB.address,
+                "phone_number" : resultFromDB.phone_number
             }
         }
     } else {

@@ -82,25 +82,47 @@ exports.addProfilePicture = async function (DTO, userDTO) {
 
 exports.getProfileInfo = async function (userDTO) {
 
-    let query = `
+    let result = {}
+
+    let query_profile = `
         SELECT
-            u.id, u.name, u.email, u.created_at,
-            ud.address, ud.phone_number, ud.avatar
+            u.id, u.name, u.email, u.created_at
         FROM
             user u
-            INNER JOIN user_detail ud ON u.id = ud.user_id
         WHERE u.id = ?
         LIMIT 1;
     `
 
-    let values = [
+    let query_profile_detail = `
+        SELECT
+            ud.address, ud.phone_number, ud.avatar
+        FROM
+            user_detail ud
+        WHERE
+            ud.user_id = ?
+        LIMIT 1;
+    `
+
+    let values_query_profile = [
         userDTO.id
     ]
     
     return new Promise(function(resolve, reject) {
-        db.query(query, values, function(error, rows, fields) {
+        db.query(query_profile, values_query_profile, function(error, rows, fields) {
             if (error) reject(error)
-            resolve(rows);            
+
+            Object.assign(result, rows[0]);
+
+            let values_query_profile_detail = [
+                userDTO.id
+            ];
+
+            db.query(query_profile_detail, values_query_profile_detail, function(error, rows, fields) {
+                if (error) reject(error);
+
+                Object.assign(result, rows[0])
+                resolve(result)
+            })           
         })
     })
 }

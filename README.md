@@ -185,15 +185,17 @@ Response :
 
 ```json 
 {
-    "code": "number",
-    "status": "string",
+    "code": 200,
+    "status": "OK",
     "data": {
-        "message": "string",
+        "message": "Successfully pull user's data info",
         "user_info": {
-            "name": "string",
-            "avatar": "string",
-            "joined_on": "string",
-            "email": "string"
+            "name": "I Wayan Bagus",
+            "avatar": "http://localhost:3000/api/profile/download/avatar/4-profile_avatar-2021-02-28-172154.jpg",
+            "joined_on": "2021-07-04T12:56:12.000Z",
+            "email": "user1@gmail.com",
+            "address": null,
+            "phone_number": null
         }
     }
 }
@@ -273,6 +275,31 @@ Response :
 ```json 
 {
     "code" : "number",
+    "status" : "string",
+    "data" : {
+        "message" : "string"
+    }
+}
+```
+
+## [GET] Get profile picture
+Request :
+- Method : GET
+- Endpoint : `/api/profile/download/avatar/:name`
+- Header :
+    - Authorization : "Bearer " + token
+    - Content-Type: application/json
+    - Accept: application/json
+
+Response :
+
+``Downloadable file```
+
+or
+
+```json 
+{
+    "code" : "500",
     "status" : "string",
     "data" : {
         "message" : "string"

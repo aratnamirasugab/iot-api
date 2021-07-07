@@ -1,7 +1,8 @@
 "use strict";
 
 const service = require('../service/profile');
-const {response} = require('../context/response')
+const {response} = require('../context/response');
+const envs = require('../../config');
 
 exports.addPhoneNumber = async function (req, res) {
     
@@ -82,10 +83,32 @@ exports.getProfileInfo = async function (req, res) {
             user_info : dataToResponse.user_info
         }, res);
     } catch (error) {
-        console.log(error);
         return response({
             code : 500,
             message : error
         }, res);
     }
+}
+
+exports.getProfileAvatar = async function (req, res) {
+ 
+    const filename = req.params.name;
+    const path = envs.IMAGE_PATH + "/" + "profile/";
+
+    try {
+        res.download(path + filename, (err) => {
+            if (err) {
+                return response({
+                    code : 500,
+                    message : "File cannot be downloaded " + err
+                }, res);
+            }
+        })        
+    } catch (error) {
+        return response({
+            code : 500,
+            message : error
+        }, res);
+    }
+
 }
