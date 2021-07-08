@@ -22,6 +22,7 @@ exports.register = async function (req, res) {
             code : dataToResponse.code,
             message : dataToResponse.message
         }, res);
+
     } catch (error) {
         console.log(error);
         return response({
