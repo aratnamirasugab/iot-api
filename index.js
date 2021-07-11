@@ -12,8 +12,11 @@ app.use(
 );
 app.use(express.json());
 
+
+// redis;
 let {bot} = require('./src/helpers/bot-logic');
 bot;
+
 let routes = require('./src/routes');
 routes(app);
 

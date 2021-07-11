@@ -2,7 +2,7 @@
 
 const repository = require('../repository/profile')
 const envs = require('../../config');
-const profileAvatarRoute = envs.BASE_URL + '/api/profile/download/avatar';
+const profileAvatarRoute = envs.BASE_URL_PICTURE + '/api/profile/download/avatar';
 
 exports.addPhoneNumber = async function (DTO, userDTO) {
 

@@ -21,7 +21,7 @@ exports.register = async function (DTO) {
 
 exports.checkUserByEmail = async function (DTO) {
 
-    let query = "SELECT * FROM user WHERE email = ?";
+    let query = "SELECT * FROM user WHERE email = ? AND deleted_at IS NULL LIMIT 1";
 
     let values = [
         DTO.email
