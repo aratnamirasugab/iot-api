@@ -59,13 +59,15 @@ module.exports = {
             "Authorization" : `Bearer ${userDTO.token}`
         }
     }),
-    // deleteDeactiveAccount: (userDTO, DTO) => axios({
-    //     "method" : "DELETE",
-    //     "url" : `${envs.BASE_URL}/api/credentials/de-actived`,
-    //     "headers" : {
-    //         "Authorization" : `Bearer ${userDTO.token}`
-    //     },
-    //     "data" : DTO
-    // })
+    postProfilePicture : (userDTO, form) => axios({
+        "method" : "POST",
+        "url" : `${envs.BASE_URL}/api/profile/upload/avatar`,
+        "headers" : {
+            "Authorization" : `Bearer ${userDTO.token}`,
+            ...form.getHeaders()
+        },
+        "data" : form
+    })
+    
 
 };

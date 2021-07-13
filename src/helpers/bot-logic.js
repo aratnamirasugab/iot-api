@@ -5,7 +5,13 @@ const envs = require('../../config');
 const botEndpoint = require("./bot");
 const bot = new Telegraf(envs.BOT_TOKEN);
 const RedisSession = require('telegraf-session-redis');
+const Telegram = require('telegraf/telegram');
 const redis = require('../config/redis');
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+const got = require('got');
+const crypto = require('crypto');
 
 const session = new RedisSession({
     store : {
@@ -275,26 +281,65 @@ const postNewProfilePictureSection = new WizardScene("post-profile-pic",
         return ctx.wizard.next();
     },
     async ctx => {
-        ctx.reply(ctx.message.photo);
+        const fileLink = await bot.telegram.getFileLink(ctx.message.photo[2].file_id)
+            .then((link) => {
+                return link
+            })
+            .catch((err) => {
+                ctx.reply("error occured when uploading image");
+                return ctx.scene.leave();
+            })
 
-        let userDTO = await redis.getAsync(ctx.from.first_name);
+        let file = await axios.get(fileLink);
+        let fileName = crypto.randomBytes(20).toString('hex') + ".jpg"
+
+        let userDTO = await redis.getAsync(ctx.from.first_name)
         userDTO = JSON.parse(userDTO);
 
+        const downloadStream = got.stream(file.config.url);
+        const fileWriterStream = fs.createWriteStream(fileName);
 
-        // botEndpoint
-        //     .getProfileInfo(userDTO)
-        //     .then(res => {
-        //         ctx.reply("Your name is " + res.data.data.user_info.name)
-        //         ctx.reply("Your email is " + res.data.data.user_info.email)
-        //         ctx.reply("Your address is " + res.data.data.user_info.address)
-        //         ctx.reply("Your phone number is " + res.data.data.user_info.phone_number)
-        //         ctx.replyWithPhoto({url: 'https://i.ytimg.com/vi/jHWKtQHXVJg/maxresdefault.jpg'})
-        //         return ctx.scene.enter("meat-menu");
-        //     })
-        //     .catch(err => {
-        //         ctx.reply(err);
-        //         return ctx.scene.leave();
-        //     })
+        downloadStream
+          .on("downloadProgress", ({ transferred, total, percent }) => {
+            const percentage = Math.round(percent * 100);
+            ctx.reply(`progress: ${transferred}/${total} (${percentage}%)`);
+          })
+          .on("error", (error) => {
+            console.error(`Download failed: ${error.message}`);
+          });
+      
+        fileWriterStream
+          .on("error", (error) => {
+            console.error(`Could not write file to system: ${error.message}`);
+          })
+          .on("finish", () => {
+            console.log(`File downloaded to ${fileName}`);
+          });
+        downloadStream.pipe(fileWriterStream);
+
+        fs.readFile(process.cwd() + `/${fileName}`, (err, fileToUpload) => {
+            
+            if (err) {
+                console.log(err)
+                return;
+            }
+
+            let form = new FormData();
+            form.append('profile_avatar', fileToUpload);
+    
+            botEndpoint
+                .postProfilePicture(userDTO, form)
+                .then((res) => {
+                    ctx.reply(res.data.data.message);
+                    return ctx.scene.enter("meat-menu");
+                })
+                .catch((err) => {
+                    ctx.reply("there was a problem when processing the image that you sent");
+                    console.error(err);
+                    return ctx.scene.leave();
+                })
+        })
+
     }
 )
 
