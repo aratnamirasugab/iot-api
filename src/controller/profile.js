@@ -55,9 +55,6 @@ exports.addProfilePicture = async function (req, res) {
     let DTO = req.body;
     let userDTO = req.user;
 
-    console.log(DTO);
-    console.log(userDTO)
-
     try {
         let dataToResponse = await service.addProfilePicture(DTO, userDTO);
 

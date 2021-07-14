@@ -211,7 +211,7 @@ Request :
 - Form-Data :
 ```
 {
-    "profile_picture" : "filelocation"
+    "profile_avatar" : "filelocation"
 } 
 ```
 
@@ -321,23 +321,79 @@ Response :
 
 ```json 
 {
-    "code" : "number",
-    "status" : "string",
-    "data" : {
-        "message" : "string",
-        "plant_status": {
-            "plant-1" : {
-                "humidity" : "number",
-                "last watering" : "datetime"
-            },
-            "plant-2" : {
-                "humidity" : "number",
-                "last watering" : "datetime"
-            },
-            "plant-n" : {
-                "humidity" : "number",
-                "last watering" : "datetime"
-            }
+    "code": 200,
+    "status": "OK",
+    "data": {
+        "message": {
+            "Items": [
+                {
+                    "timeStamp": "Wed Jul 14 2021 16:41:54 GMT+0700 (Western Indonesia Time)",
+                    "temperature": "25",
+                    "user_email": "bot@gmail.com",
+                    "soilHumidity": "1020"
+                },
+                {
+                    "timeStamp": "Wed Jul 14 2021 16:42:14 GMT+0700 (Western Indonesia Time)",
+                    "temperature": "25",
+                    "user_email": "bot@gmail.com",
+                    "soilHumidity": "1021"
+                },
+                {
+                    "timeStamp": "Wed Jul 14 2021 16:42:34 GMT+0700 (Western Indonesia Time)",
+                    "temperature": "25",
+                    "user_email": "bot@gmail.com",
+                    "soilHumidity": "1021"
+                },
+                {
+                    "timeStamp": "Wed Jul 14 2021 16:42:54 GMT+0700 (Western Indonesia Time)",
+                    "temperature": "25",
+                    "user_email": "bot@gmail.com",
+                    "soilHumidity": "1020"
+                },
+                {
+                    "timeStamp": "Wed Jul 14 2021 16:43:14 GMT+0700 (Western Indonesia Time)",
+                    "temperature": "25",
+                    "user_email": "bot@gmail.com",
+                    "soilHumidity": "1021"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:51:42 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1022"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:52:02 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1022"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:52:22 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1022"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:52:42 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1021"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:53:02 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1022"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:53:22 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1021"
+                },
+                {
+                    "user_email": "bot@gmail.com",
+                    "timeStamp": "Wed Jul 14 2021 16:53:42 GMT+0700 (Western Indonesia Time)",
+                    "soilHumidity": "1022"
+                }
+            ],
+            "Count": 12,
+            "ScannedCount": 12
         }
     }
 }

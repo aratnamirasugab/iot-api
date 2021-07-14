@@ -1,19 +1,20 @@
 "use strict";
 
 const {response} = require('../context/response');
-let {runMoistfunction} = require('../helpers/moisture');
+let {getDataByKey} = require('../helpers/dynammo-script');
 
 exports.getPlantsStatus = async function (req, res) {
 
+    let userDTO = req.user;
     try {
         
-        let dataToResponse = runMoistfunction();
-        console.log(dataToResponse)
+        let result = await getDataByKey(userDTO);
 
-        // return response({
-        //     code : dataToResponse.code,
-        //     message : dataToResponse.message
-        // }, res);
+        return response({
+            code : 200,
+            message : result
+        }, res);
+        
     } catch (error) {
         console.log(error);
         return response({

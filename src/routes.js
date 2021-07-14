@@ -8,6 +8,7 @@ const {auth} = require('./middleware/auth');
 const {upload} = require('./middleware/multer');
 
 module.exports = function (app) {
+    
     app.get('/api/healthcheck', healthcheck); 
 
     app.post('/api/credentials/register', register);
@@ -21,6 +22,6 @@ module.exports = function (app) {
     app.get('/api/profile/download/avatar/:name', auth, getProfileAvatar);
     app.post('/api/profile/upload/avatar', auth, upload.single('profile_avatar'), addProfilePicture);
 
-    // app.get('/api/plants/status', auth, getPlantsStatus);
+    app.get('/api/plants/status', auth, getPlantsStatus);
 
 };

@@ -1,46 +1,48 @@
-// "use strict";
+let five = require('johnny-five');
+let {publishData} = require('./dynammo-script');
 
-// let five = require('johnny-five')
-// let board = new five.Board({ port: "/dev/ttyACM0"});
+function runBoard(userDTO) {
+    // init board
+    var boards = new five.Boards ([
+        {id: 'uno', port: "/dev/ttyACM0", debug: true}
+    ])
+    
+    // init value
+    let temperature, humidity;
+    
+    boards.on('ready', function() {
+        console.log("board ready");
+    
+        let soilMoisture = new five.Sensor({
+            pin: "A0",
+            enabled : false,
+            board : boards.byId("uno")
+        });
+    
+        soilMoisture.on("data", function() {
+            humidity = soilMoisture.value;
+        })
+    
+        boards.byId("uno").loop(15000, function () {
+            soilMoisture.enable();
+            boards.byId("uno").wait(500, function() {
+                soilMoisture.disable();
+            })
+        })
+    
+        awsUpdater();
+    })
+    
+    function awsUpdater() {
+        setInterval(function() {
+            let DTO = {
+                "email" : userDTO.email,
+                "humidity" : humidity,
+                "temperature" : temperature
+            }
+            publishData(DTO);
+        }, 20000);
+    }
+}
 
-// exports.runMoistfunction = function(callback) {
-
-//     console.log("masoekskk");
-//     let level_moist = "";
-//     let moisture_value = 0;
-
-//     board.on("ready", function() {
-        
-//         // change or add this depending on your sensor(s)
-//         let moisture = new five.Sensor({
-//             pin : "A0"
-//         })
-
-//         // let getMoistAndLevel = function(callback) {
-
-//         console.log("test")
-        
-//         moisture.on("data", function() {
-//             moisture.enable();
-//             moisture_value = moisture.value;
-
-//             if (moisture.value <= 400) {
-//                 level_moist = "Low"
-//             } else if (moisture.value > 400 && moisture.value < 800) {
-//                 level_moist =   "Average"
-//             } else {
-//                 level_moist = "High"
-//             }
-            
-//             console.log("halo")
-//             console.log(moisture_value)
-//             moisture.disable();
-//             // callback (
-//             //     level_moist,
-//             //     moisture_value
-//             // )
-//         })
-//     })
-//     console.log("woiiiiiii ", level_moist)
-//     // return 
-// }
+module.exports.runBoard = runBoard;

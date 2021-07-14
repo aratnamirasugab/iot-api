@@ -11,6 +11,4 @@ client.on('error', function (err) {
     console.log('Error ' + err);
 });
 
-console.log("redis is on");
-
 module.exports = client;

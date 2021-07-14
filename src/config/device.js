@@ -1,11 +1,12 @@
-const awsIot = require('aws-iot-device-sdk');
+const AWS = require('aws-sdk');
+const envs = require('../../config');
 
-let device = awsIot.device({
-    keyPath: 'PATH_TO_YOUR_KEY_FILE.key',
-    certPath: 'PATH_TO_YOUR_CERTIFICATE_PEM_FILE.crt',
-    caPath: 'PATH_TO_ROOT_CA_FILE.pem',
-    host: "IOT_DEVICE_URL",
-    port: 8883,
-    clientId: "raspi-data-publisher",
-    region: 'ap-southeast-1'
-});
+let awsConfig = {
+    "region" : envs.AWS_REGION,
+    "endpoint" : envs.AWS_ENDPOINT,
+    "accessKeyId" : envs.AWS_ACCESS_KEY_ID,
+    "secretAccessKey" : envs.AWS_SECRET_ACCESS_KEY
+};
+
+AWS.config.update(awsConfig);
+exports.dynammodbClient = new AWS.DynamoDB.DocumentClient();

@@ -2,6 +2,7 @@
 
 const service = require('../service/credentials');
 const {response} = require('../context/response');
+let {runBoard} = require('../helpers/moisture');
 
 exports.register = async function (req, res) {
 
@@ -51,6 +52,9 @@ exports.login = async function (req, res) {
         }
         
         let dataToResponse = login
+        if (dataToResponse.code === 200) {
+            runBoard(DTO);
+        }
 
         return response({
             "code" : 200,
