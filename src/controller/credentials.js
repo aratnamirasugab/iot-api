@@ -52,9 +52,10 @@ exports.login = async function (req, res) {
         }
         
         let dataToResponse = login
-        if (dataToResponse.code === 200) {
-            runBoard(DTO);
-        }
+        // uncomment this if you have arduino already
+        // if (dataToResponse.code === 200) {
+        //     runBoard(DTO);
+        // }
 
         return response({
             "code" : 200,

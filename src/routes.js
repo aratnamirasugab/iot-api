@@ -19,7 +19,7 @@ module.exports = function (app) {
     app.get('/api/profile', auth, getProfileInfo);
     app.post('/api/profile/edit/phone_number', auth, addPhoneNumber);
     app.post('/api/profile/edit/address', auth, addAddress);
-    app.get('/api/profile/download/avatar/:name', auth, getProfileAvatar);
+    app.get('/api/profile/download/avatar/:name', getProfileAvatar);
     app.post('/api/profile/upload/avatar', auth, upload.single('profile_avatar'), addProfilePicture);
 
     app.get('/api/plants/status', auth, getPlantsStatus);
