@@ -35,7 +35,8 @@ exports.register = async function(DTO) {
 exports.login = async function (DTO) {
 
     let checkUserAlreadyRegistered = await repository.checkUserByEmail(DTO);
-    if (!checkUserAlreadyRegistered) {
+
+    if (!checkUserAlreadyRegistered || checkUserAlreadyRegistered.length === 0) {
         return {
             code : 404,
             message : "Account not found"
