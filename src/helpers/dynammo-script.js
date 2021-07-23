@@ -11,7 +11,7 @@ exports.getDataByKey = async function (DTO) {
         "ExpressionAttributeNames": {
           "#DYNOBASE_user_email": "user_email"
         },
-        "ScanIndexForward": true
+        "ScanIndexForward": false
     };
 
     const result = await dynammodbClient.query(params).promise();
@@ -19,10 +19,10 @@ exports.getDataByKey = async function (DTO) {
 }
 
 exports.publishData = function (DTO) {
-        
+    
     let input = {
         'user_email' : DTO.email,
-        'soilHumidity': DTO.humidity.toString(),
+        'soilHumidity': DTO.humidity,
         'temperature' : DTO.temperature,
         'timeStamp' : new Date().toString()
     }

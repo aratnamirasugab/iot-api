@@ -5,7 +5,6 @@ const envs = require('../../config');
 const botEndpoint = require("./bot");
 const bot = new Telegraf(envs.BOT_TOKEN);
 const RedisSession = require('telegraf-session-redis');
-const Telegram = require('telegraf/telegram');
 const redis = require('../config/redis');
 const axios = require('axios');
 const FormData = require('form-data');
