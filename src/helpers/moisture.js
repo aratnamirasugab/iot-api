@@ -21,11 +21,12 @@ function runBoard(userDTO) {
         });
 
         let waterPump = new five.Relay({
-            pin : 10,
-            type : "NO"
+            pin : "A2"
         });
 
-        waterPump.toggle();
+        setInterval(function() {
+            waterPump.toggle();
+        }, 3000);
     
         soilMoisture.on("data", function() {
             humidity = soilMoisture.value;
@@ -49,7 +50,7 @@ function runBoard(userDTO) {
                 "temperature" : 25
             }
             publishData(DTO);
-        },  20000);
+        },  10000);
     }
 }
 

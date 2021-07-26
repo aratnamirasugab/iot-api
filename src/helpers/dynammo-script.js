@@ -1,4 +1,5 @@
 let {dynammodbClient} = require('../config/device');
+const { generateCurrentTime } = require('./time');
 
 exports.getDataByKey = async function (DTO) {
 
@@ -19,19 +20,17 @@ exports.getDataByKey = async function (DTO) {
 }
 
 exports.publishData = function (DTO) {
-    
-    let input = {
-        'user_email' : DTO.email,
-        'soilHumidity': DTO.humidity,
-        'temperature' : DTO.temperature,
-        'timeStamp' : new Date().toString()
-    }
 
     let params = {
         TableName : "iot_data",
-        Item : input
+        Item : {
+            'user_email' : DTO.email,
+            'soilHumidity': DTO.humidity,
+            'temperature' : DTO.temperature,
+            'created_at' : generateCurrentTime()
+        }
     }
-
+    
     dynammodbClient.put(params, (err, data) => {
         if (err) {
             console.log("failed to insert data to dynammodb ", err);

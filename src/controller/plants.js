@@ -9,11 +9,14 @@ exports.getPlantsStatus = async function (req, res) {
     try {
         
         let result = await getDataByKey(userDTO);
+
         result.Items.sort(function (a,b) {
             return new Date(b.timeStamp) - new Date(a.timeStamp);
         })
 
-        result.Items.length = 10;
+        if (result.Items.length > 10) {
+            result.Items.length = 10;
+        }
 
         return response({
             code : 200,
