@@ -44,6 +44,13 @@ module.exports = {
         },
         "data" : DTO
     }),
+    postWaterPlant: (userDTO) => axios({
+        "method" : "POST",
+        "url" : `${envs.BASE_URL}/api/plants/water`,
+        "headers" : {
+            "Authorization" : `Bearer ${userDTO.token}`
+        }
+    }),
     postAddAddress: (userDTO, DTO) => axios({
         "method" : "POST",
         "url" : `${envs.BASE_URL}/api/profile/edit/address`,
@@ -67,6 +74,13 @@ module.exports = {
             ...form.getHeaders()
         },
         "data" : form
+    }),
+    getPlantStatus: (userDTO) => axios({
+        "method" : "GET",
+        "url" : `${envs.BASE_URL}/api/plants/status`,
+        "headers" : {
+            "Authorization" : `Bearer ${userDTO.token}`
+        }
     })
     
 

@@ -35,7 +35,6 @@ bot.start(ctx => {
   );
 });
 
-
 const mainMenuSection = new WizardScene("main-menu",
     ctx => {
         ctx.reply(
@@ -108,13 +107,16 @@ const loginSection = new WizardScene("login-wizard",
                 ctx.reply("Successfully login!");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://media.giphy.com/media/XreQmk7ETCak0/giphy.gif")
-                }, 2000, ctx);
+                }, 500, ctx);
                 let key = ctx.from.first_name;
                 redisSession.saveSession(key, data);
                 return ctx.scene.enter("meat-menu", ctx.scene.session);
             })
-            .catch(err => {
+            .catch(err => { 
                 ctx.reply("User not found or wrong credential");
+                setTimeout((ctx) => {
+                    ctx.replyWithAnimation("https://tenor.com/view/no-nope-smh-kanye-west-gif-4246025")
+                }, 500, ctx);
                 return ctx.scene.enter("main-menu");
             })
     }
@@ -144,12 +146,18 @@ const changePasswordSection = new WizardScene("change-password",
         botEndpoint
             .putChangePassword(userDTO, DTO)
             .then(res => {
-                ctx.reply(res.data.data.message)
+                ctx.reply(res.data.data.message);
+                setTimeout((ctx) => {
+                    ctx.replyWithAnimation("https://tenor.com/view/smells-like-success-success-andrew-mcfarlane-gif-18049300")
+                }, 500, ctx);
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply(err);
-                return ctx.scene.leave();
+                ctx.reply("Password didn't match");
+                setTimeout((ctx) => {
+                    ctx.replyWithAnimation("https://tenor.com/view/busu8s-at-least-you-tried-gif-7859548")
+                }, 500, ctx);
+                return ctx.scene.enter("meat-menu");
             })
     }
 )
@@ -165,7 +173,10 @@ const deactiveAccountSection = new WizardScene("deactive-account",
     async ctx => {
         ctx.scene.session.user.agree = ctx.message.text.toLowerCase();
         
-        if (ctx.scene.session.user.agree != "yes") {
+        if (ctx.scene.session.user.agree !== "yes") {
+            setTimeout((ctx) => {
+                ctx.replyWithAnimation("https://tenor.com/view/despicable-me-agnes-please-dont-go-beg-the-look-gif-7543421")
+            }, 0, ctx);
             return ctx.scene.enter("meat-menu");
         }
 
@@ -175,12 +186,18 @@ const deactiveAccountSection = new WizardScene("deactive-account",
         botEndpoint
             .deleteDeactiveAccount(userDTO, ctx.scene.session.user)
             .then(res => {
-                ctx.reply(res.data.data.message)
+                ctx.reply(res.data.data.message);
+                setTimeout((ctx) => {
+                    ctx.replyWithAnimation("https://tenor.com/view/despicable-me-agnes-please-dont-go-beg-the-look-gif-7543421")
+                }, 0, ctx);
                 return ctx.scene.leave();
             })
-            .catch(err => {
-                ctx.reply(err);
-                return ctx.scene.leave();
+            .catch(err => { 
+                setTimeout((ctx) => {
+                    ctx.replyWithAnimation("https://tenor.com/view/seriously-sideeye-confused-gif-8776030")
+                }, 0, ctx);
+                ctx.reply("Failed when deactived account");
+                return ctx.scene.enter("meat-menu");
             })
     }
 )
@@ -199,7 +216,10 @@ const addPhoneNumberSection = new WizardScene("phone-number",
         let isnum = /^\d+$/.test(ctx.scene.session.user.phone_number);
 
         if (!isnum) {
-            ctx.reply("Please enter correct phone number!");
+            setTimeout((ctx) => {
+                ctx.replyWithAnimation("https://tenor.com/view/angryface-gif-4425198")
+            }, 0, ctx);
+            ctx.reply("Please enter a correct phone number!");
             return ctx.scene.enter("meat-menu")
         }
 
@@ -213,8 +233,26 @@ const addPhoneNumberSection = new WizardScene("phone-number",
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply(err);
-                return ctx.scene.leave();
+                ctx.reply("Failed to change phone number");
+                return ctx.scene.enter("meat-menu");
+            })
+    }
+)
+
+const waterThePlantSection = new WizardScene("water-plant",
+    async ctx => {
+        let userDTO = await redis.getAsync(ctx.from.first_name);
+        userDTO = JSON.parse(userDTO);
+
+        botEndpoint
+            .postWaterPlant(userDTO)
+            .then(res => {
+                ctx.reply(res.data.data.message)
+                return ctx.scene.enter("meat-menu");
+            })
+            .catch(err => {
+                ctx.reply("Failed to water the plant");
+                return ctx.scene.enter("meat-menu");
             })
     }
 )
@@ -232,6 +270,9 @@ const addAddressSection = new WizardScene("add-address",
 
         if (ctx.scene.session.user.address.length < 5) {
             ctx.reply("Please enter correct address!");
+            setTimeout((ctx) => {
+                ctx.replyWithAnimation("https://tenor.com/view/angryface-gif-4425198")
+            }, 0, ctx);
             return ctx.scene.enter("meat-menu")
         }
 
@@ -245,8 +286,8 @@ const addAddressSection = new WizardScene("add-address",
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply(err);
-                return ctx.scene.leave();
+                ctx.reply("Failed to enter address");
+                return ctx.scene.enter("meat-menu");
             })
     }
 )
@@ -263,12 +304,39 @@ const getProfileInfoSection = new WizardScene("profile-info",
                 ctx.reply("Your email is " + res.data.data.user_info.email)
                 ctx.reply("Your address is " + res.data.data.user_info.address)
                 ctx.reply("Your phone number is " + res.data.data.user_info.phone_number)
-                ctx.replyWithPhoto({url: 'https://i.ytimg.com/vi/jHWKtQHXVJg/maxresdefault.jpg'})
+                ctx.replyWithPhoto({url: `${res.data.data.user_info.avatar}`})
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply(err);
-                return ctx.scene.leave();
+                ctx.reply("User not found");
+                return ctx.scene.enter("main-menu");
+            })
+    }
+)
+
+const getPlantStatusSection = new WizardScene("plant-status",
+    async ctx => {
+        let userDTO = await redis.getAsync(ctx.from.first_name);
+        userDTO = JSON.parse(userDTO);
+
+        botEndpoint
+            .getPlantStatus(userDTO)
+            .then(res => {
+                ctx.reply(`The Temperature is : ${res.data.data.message.Items[0].temperature}`)
+                ctx.reply(`Soil Humidity is : ${res.data.data.message.Items[0].soilHumidity}`)
+                ctx.reply(`Last time you watering the plant is : ${res.data.data.last_water.Items[0].created_at}`)
+                if (res.data.data.message.Items[0].soilHumidity >= 800) {
+                    ctx.reply(`The humidity level is low`)
+                } else {
+                    ctx.reply(`The humidity level is enough for the plant`)
+                }
+            })
+            .then(res => {
+                return ctx.scene.enter("meat-menu");
+            })
+            .catch(err => {
+                ctx.reply("Failed when getting plant status");
+                return ctx.scene.enter("main-menu");
             })
     }
 )
@@ -280,7 +348,7 @@ const postNewProfilePictureSection = new WizardScene("post-profile-pic",
         return ctx.wizard.next();
     },
     async ctx => {
-        const fileLink = await bot.telegram.getFileLink(ctx.message.photo[2].file_id)
+        const fileLink = await bot.telegram.getFileLink(ctx.message.photo[0].file_id)
             .then((link) => {
                 return link
             })
@@ -320,7 +388,7 @@ const postNewProfilePictureSection = new WizardScene("post-profile-pic",
             
             if (err) {
                 console.log(err)
-                return;
+                return ctx.scene.leave();
             }
 
             let form = new FormData();
@@ -350,21 +418,20 @@ const meatMenuSection = new WizardScene("meat-menu",
         /chngpswd -> ganti password akun saya.
         /offaccount      -> hapus akun OASYS saya.
 
-        /profile -> liat biodata dan foto saya donk.
+        /profile -> lihat biodata dan foto saya.
         /poto -> upload foto profile baru.
-        /hp -> masukin nomor hp baru.
-        /alamat -> masukin alamat rumah saya.
+        /hp -> input nomor hp baru.
+        /alamat -> input alamat rumah saya.
 
-        /tanaman -> liat status tanaman saya donk.
-        /siram -> siram tanaman saya donk.
-        /males -> lagi males, pengennya disiramin OASYS.
+        /tanaman -> lihat status tanaman saya.
+        /siram -> siram tanaman saya.
         `
       );
     }
 )
 
 // stage section
-const stage = new Stage([registerSection, mainMenuSection, loginSection, meatMenuSection, changePasswordSection, deactiveAccountSection, addPhoneNumberSection, addAddressSection, getProfileInfoSection, postNewProfilePictureSection]);
+const stage = new Stage([registerSection, mainMenuSection,  waterThePlantSection, getPlantStatusSection, loginSection, meatMenuSection, changePasswordSection, deactiveAccountSection, addPhoneNumberSection, addAddressSection, getProfileInfoSection, postNewProfilePictureSection]);
 stage.command('cancel', (ctx) => {
     ctx.reply("Operation canceled");
     return ctx.scene.enter("main-menu")
@@ -388,6 +455,14 @@ stage.command('offaccount', (ctx) => {
 
 stage.command('profile', (ctx) => {
     ctx.scene.enter("profile-info");
+});
+
+stage.command('siram', (ctx) => {
+    ctx.scene.enter("water-plant");
+});
+
+stage.command('tanaman', (ctx) => {
+    ctx.scene.enter("plant-status");
 });
 
 stage.command('poto', (ctx) => {
