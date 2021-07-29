@@ -28,9 +28,7 @@ usually ubuntu group name is dialout
 - Refer to this [Link](https://drive.google.com/file/d/1s24LmhADNQQq-smCoZ5xY6oFJUkGI9k9/view?usp=sharing)
 
 ## Diagrams 
-- Sequence : TBA
-- ERD : Refer to this [Link](https://dbdiagram.io/d/60c096260c1ff875fcd4167b)
-- Activity : TBA
+- ERD : Refer to this [Link](https://dbdiagram.io/d/60ec3d994ed9be1c05c8b51d)
 
 #
 #
