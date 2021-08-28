@@ -8,28 +8,40 @@ function runBoard(userDTO) {
     ])
     
     // init value
-    let temperature, humidity;
+    let tmp, humidity;
     
     boards.on('ready', function() {
 
         console.log("board ready");
     
         let soilMoisture = new five.Sensor({
-            pin: "A0",
+            pin: "A2",
+            enabled : false,
+            board : boards.byId("uno")
+        });
+
+        let temperature = new five.Sensor({
+            pin: "A1",
             enabled : false,
             board : boards.byId("uno")
         });
 
         let waterPump = new five.Relay({
-            pin : "A2"
+            pin : "A3"
         });
 
         setInterval(function() {
             waterPump.toggle();
         }, 3000);
+        
+        waterPump.toggle(); // ini ngeclose listrik
     
         soilMoisture.on("data", function() {
             humidity = soilMoisture.value;
+        })
+
+        temperature.on("data", function() {
+            tmp = temperature.value;
         })
     
         boards.byId("uno").loop(15000, function () {
@@ -47,7 +59,7 @@ function runBoard(userDTO) {
             let DTO = {
                 "email" : userDTO.email,
                 "humidity" : humidity,
-                "temperature" : 25
+                "temperature" : tmp
             }
             publishData(DTO);
         },  10000);

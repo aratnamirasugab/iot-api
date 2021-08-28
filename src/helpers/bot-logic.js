@@ -77,8 +77,8 @@ const registerSection = new WizardScene("register-wizard",
                 return ctx.scene.enter("main-menu");
             })
             .catch(err => {
-                ctx.reply(err);
-                return ctx.scene.leave();
+                ctx.reply("Failed to register, Please contact our engineer");
+                return ctx.scene.enter("main-menu");
             })
     }
 )

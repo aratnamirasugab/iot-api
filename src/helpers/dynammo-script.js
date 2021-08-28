@@ -52,6 +52,7 @@ exports.publishData = function (DTO) {
     dynammodbClient.put(params, (err, data) => {
         if (err) {
             console.log("failed to insert data to dynammodb ", err);
+            // logger.error()
         }
     })
 }
