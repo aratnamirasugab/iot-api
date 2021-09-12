@@ -26,11 +26,10 @@ bot.launch();
 
 bot.start(ctx => {
   ctx.reply(
-    `Hello ${ctx.from.first_name}, Selamat datang di OASYS, platform penyiraman otomatis berbasis cloud karya anak bangsa, Apakah ingin kamu lakukan?
+    `Halo ${ctx.from.first_name}, Selamat datang di OASYS, platform penyiraman otomatis berbasis awan karya anak bangsa, Apakah ingin kamu lakukan?
 
-    /register -> buat akun baru dan nikmati fitur OASYS
-    /login      -> masuk ke akun kamu di OASYS
-    
+    /daftar -> buat akun baru dan nikmati fitur OASYS
+    /masuk      -> masuk ke akun kamu di OASYS
     `
   );
 });
@@ -38,10 +37,10 @@ bot.start(ctx => {
 const mainMenuSection = new WizardScene("main-menu",
     ctx => {
         ctx.reply(
-        `Hello ${ctx.from.first_name}, Selamat datang di OASYS, platform penyiraman otomatis berbasis cloud karya anak bangsa, Apakah yang ingin kamu lakukan?
+        `Hello ${ctx.from.first_name}, Selamat datang di OASYS, platform penyiraman otomatis berbasis awan karya anak bangsa, Apakah yang ingin kamu lakukan?
     
-        /register -> buat akun baru dan nikmati fitur OASYS
-        /login      -> masuk ke akun kamu di OASYS
+        /daftar -> buat akun baru dan nikmati fitur OASYS
+        /masuk      -> masuk ke akun kamu di OASYS
         `
       );
 
@@ -51,18 +50,18 @@ const mainMenuSection = new WizardScene("main-menu",
 
 const registerSection = new WizardScene("register-wizard",
     ctx => {
-        ctx.reply("Enter your name : ");
+        ctx.reply("Ketik namamu : ");
         ctx.scene.session.user = {};
         return ctx.wizard.next();
     },
     ctx => {
         ctx.scene.session.user.name = ctx.message.text;
-        ctx.reply("Enter your email : ");
+        ctx.reply("ketik emailmu : ");
         return ctx.wizard.next();
     },
     ctx => {
         ctx.scene.session.user.email = ctx.message.text;
-        ctx.reply("Enter your password : ");
+        ctx.reply("Ketik kata sandimu : ");
         return ctx.wizard.next();
     },
     ctx => {
@@ -70,14 +69,15 @@ const registerSection = new WizardScene("register-wizard",
         botEndpoint
             .postRegister(ctx.scene.session.user)
             .then(res => {
-                ctx.reply(res.data.data.message);
+                ctx.reply("Berhasil mendaftar");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://media.giphy.com/media/YnBntKOgnUSBkV7bQH/giphy.gif")
                 }, 2000, ctx);
                 return ctx.scene.enter("main-menu");
             })
             .catch(err => {
-                ctx.reply("Failed to register, Please contact our engineer");
+                console.log(err);
+                ctx.reply("Gagal untuk mendaftar, mohon hubungi layanan konsumen kami");
                 return ctx.scene.enter("main-menu");
             })
     }
@@ -85,13 +85,13 @@ const registerSection = new WizardScene("register-wizard",
 
 const loginSection = new WizardScene("login-wizard",
     ctx => {
-        ctx.reply("Enter your email : ");
+        ctx.reply("Ketik emailmu : ");
         ctx.scene.session.user = {};
         return ctx.wizard.next();
     },
     ctx => {
         ctx.scene.session.user.email = ctx.message.text;
-        ctx.reply("Enter your password : ");
+        ctx.reply("Ketik kata sandimu : ");
         return ctx.wizard.next();
     },
     ctx => {
@@ -104,7 +104,7 @@ const loginSection = new WizardScene("login-wizard",
                     "email": ctx.scene.session.user.email,
                     "token" : res.data.data.token 
                 }
-                ctx.reply("Successfully login!");
+                ctx.reply("Berhasil masuk!");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://media.giphy.com/media/XreQmk7ETCak0/giphy.gif")
                 }, 500, ctx);
@@ -113,7 +113,7 @@ const loginSection = new WizardScene("login-wizard",
                 return ctx.scene.enter("meat-menu", ctx.scene.session);
             })
             .catch(err => { 
-                ctx.reply("User not found or wrong credential");
+                ctx.reply("User tidak ditemukan atau salah kredensial");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://tenor.com/view/no-nope-smh-kanye-west-gif-4246025")
                 }, 500, ctx);
@@ -124,13 +124,13 @@ const loginSection = new WizardScene("login-wizard",
 
 const changePasswordSection = new WizardScene("change-password",
     ctx => {
-        ctx.reply("Enter your password : ");
+        ctx.reply("Ketik kata sandimu : ");
         ctx.scene.session.user = {};
         return ctx.wizard.next();
     },
     ctx => {
         ctx.scene.session.user.old_password = ctx.message.text;
-        ctx.reply("Enter your new password : ");
+        ctx.reply("Ketik kata sandimu : ");
         return ctx.wizard.next();
     },
     async ctx => {
@@ -146,14 +146,14 @@ const changePasswordSection = new WizardScene("change-password",
         botEndpoint
             .putChangePassword(userDTO, DTO)
             .then(res => {
-                ctx.reply(res.data.data.message);
+                ctx.reply("Berhasil mengubah kata sandi");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://tenor.com/view/smells-like-success-success-andrew-mcfarlane-gif-18049300")
                 }, 500, ctx);
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply("Password didn't match");
+                ctx.reply("Kata sandi tidak cocok ");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://tenor.com/view/busu8s-at-least-you-tried-gif-7859548")
                 }, 500, ctx);
@@ -165,7 +165,7 @@ const changePasswordSection = new WizardScene("change-password",
 const deactiveAccountSection = new WizardScene("deactive-account",
     ctx => {
         ctx.reply(
-            "Are you sure ? type (yes or no)",
+            "Apakah kamu yakin ? ketik (yes atau no)",
         );
         ctx.scene.session.user = {};
         return ctx.wizard.next();
@@ -186,7 +186,7 @@ const deactiveAccountSection = new WizardScene("deactive-account",
         botEndpoint
             .deleteDeactiveAccount(userDTO, ctx.scene.session.user)
             .then(res => {
-                ctx.reply(res.data.data.message);
+                ctx.reply("Berhasil menonaktifkan akun");
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://tenor.com/view/despicable-me-agnes-please-dont-go-beg-the-look-gif-7543421")
                 }, 0, ctx);
@@ -196,7 +196,7 @@ const deactiveAccountSection = new WizardScene("deactive-account",
                 setTimeout((ctx) => {
                     ctx.replyWithAnimation("https://tenor.com/view/seriously-sideeye-confused-gif-8776030")
                 }, 0, ctx);
-                ctx.reply("Failed when deactived account");
+                ctx.reply("Terjadi kegagalan pada saat menonaktifkan akun");
                 return ctx.scene.enter("meat-menu");
             })
     }
@@ -205,7 +205,7 @@ const deactiveAccountSection = new WizardScene("deactive-account",
 const addPhoneNumberSection = new WizardScene("phone-number",
     ctx => {
         ctx.reply(
-            "Please enter your phone number : ",
+            "Ketik nomor telepon mu : ",
         );
         ctx.scene.session.user = {};
         return ctx.wizard.next();
@@ -219,7 +219,7 @@ const addPhoneNumberSection = new WizardScene("phone-number",
             setTimeout((ctx) => {
                 ctx.replyWithAnimation("https://tenor.com/view/angryface-gif-4425198")
             }, 0, ctx);
-            ctx.reply("Please enter a correct phone number!");
+            ctx.reply("Mohon untuk ketik nomor telepon yang benar!");
             return ctx.scene.enter("meat-menu")
         }
 
@@ -229,11 +229,11 @@ const addPhoneNumberSection = new WizardScene("phone-number",
         botEndpoint
             .postAddPhoneNumber(userDTO, ctx.scene.session.user)
             .then(res => {
-                ctx.reply(res.data.data.message)
+                ctx.reply("Berhasil untuk memasukan nomor telepon")
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply("Failed to change phone number");
+                ctx.reply("Terjadi kegalalan pada saat memasukan nomor telepon");
                 return ctx.scene.enter("meat-menu");
             })
     }
@@ -247,11 +247,11 @@ const waterThePlantSection = new WizardScene("water-plant",
         botEndpoint
             .postWaterPlant(userDTO)
             .then(res => {
-                ctx.reply(res.data.data.message)
+                ctx.reply("Berhasil untuk menyiram tanaman")
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply("Failed to water the plant");
+                ctx.reply("Gagal untuk menyiram tanaman");
                 return ctx.scene.enter("meat-menu");
             })
     }
@@ -260,7 +260,7 @@ const waterThePlantSection = new WizardScene("water-plant",
 const addAddressSection = new WizardScene("add-address",
     ctx => {
         ctx.reply(
-            "Please enter your address : ",
+            "Ketik alamatmu : ",
         );
         ctx.scene.session.user = {};
         return ctx.wizard.next();
@@ -269,7 +269,7 @@ const addAddressSection = new WizardScene("add-address",
         ctx.scene.session.user.address = ctx.message.text.toLowerCase();
 
         if (ctx.scene.session.user.address.length < 5) {
-            ctx.reply("Please enter correct address!");
+            ctx.reply("Mohon ketik alamat dengan benar!");
             setTimeout((ctx) => {
                 ctx.replyWithAnimation("https://tenor.com/view/angryface-gif-4425198")
             }, 0, ctx);
@@ -282,11 +282,11 @@ const addAddressSection = new WizardScene("add-address",
         botEndpoint
             .postAddAddress(userDTO, ctx.scene.session.user)
             .then(res => {
-                ctx.reply(res.data.data.message)
+                ctx.reply("Berhasil memasukan alamat")
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply("Failed to enter address");
+                ctx.reply("Terjadi kegagalan pada saat memasukan alamat");
                 return ctx.scene.enter("meat-menu");
             })
     }
@@ -300,15 +300,15 @@ const getProfileInfoSection = new WizardScene("profile-info",
         botEndpoint
             .getProfileInfo(userDTO)
             .then(res => {
-                ctx.reply("Your name is " + res.data.data.user_info.name)
-                ctx.reply("Your email is " + res.data.data.user_info.email)
-                ctx.reply("Your address is " + res.data.data.user_info.address)
-                ctx.reply("Your phone number is " + res.data.data.user_info.phone_number)
+                ctx.reply("Nama anda adalah " + res.data.data.user_info.name)
+                ctx.reply("Email anda adalah " + res.data.data.user_info.email)
+                ctx.reply("Alamat anda adalah " + res.data.data.user_info.address)
+                ctx.reply("Nomor telepon anda adalah " + res.data.data.user_info.phone_number)
                 ctx.replyWithPhoto({url: `${res.data.data.user_info.avatar}`})
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply("User not found");
+                ctx.reply("Pengguna tidak ditemukan");
                 return ctx.scene.enter("main-menu");
             })
     }
@@ -322,20 +322,20 @@ const getPlantStatusSection = new WizardScene("plant-status",
         botEndpoint
             .getPlantStatus(userDTO)
             .then(res => {
-                ctx.reply(`The Temperature is : ${res.data.data.message.Items[0].temperature}`)
-                ctx.reply(`Soil Humidity is : ${res.data.data.message.Items[0].soilHumidity}`)
-                ctx.reply(`Last time you watering the plant is : ${res.data.data.last_water.Items[0].created_at}`)
+                ctx.reply(`Temperatur : ${res.data.data.message.Items[0].temperature}`)
+                ctx.reply(`Kelembaban tanah : ${res.data.data.message.Items[0].soilHumidity}`)
+                ctx.reply(`Terakhir kali anda menyiram tanaman : ${res.data.data.last_water.Items[0].created_at}`)
                 if (res.data.data.message.Items[0].soilHumidity >= 800) {
-                    ctx.reply(`The humidity level is low`)
+                    ctx.reply(`Kelembaban tanah rendah`)
                 } else {
-                    ctx.reply(`The humidity level is enough for the plant`)
+                    ctx.reply(`Kelembaban tanah cukup untuk tanaman`)
                 }
             })
             .then(res => {
                 return ctx.scene.enter("meat-menu");
             })
             .catch(err => {
-                ctx.reply("Failed when getting plant status");
+                ctx.reply("Terjadi kegagalan pada saat meminta informasi tanaman");
                 return ctx.scene.enter("main-menu");
             })
     }
@@ -343,7 +343,7 @@ const getPlantStatusSection = new WizardScene("plant-status",
 
 const postNewProfilePictureSection = new WizardScene("post-profile-pic",
     ctx => {
-        ctx.reply("Please attach the image..");
+        ctx.reply("Silahkan pilih gambar yang ingin di unggah");
         ctx.scene.session.user = {}
         return ctx.wizard.next();
     },
@@ -353,7 +353,7 @@ const postNewProfilePictureSection = new WizardScene("post-profile-pic",
                 return link
             })
             .catch((err) => {
-                ctx.reply("error occured when uploading image");
+                ctx.reply("Terjadi kegagalan pada saat mengunggah foto profil");
                 return ctx.scene.leave();
             })
 
@@ -397,11 +397,11 @@ const postNewProfilePictureSection = new WizardScene("post-profile-pic",
             botEndpoint
                 .postProfilePicture(userDTO, form)
                 .then((res) => {
-                    ctx.reply(res.data.data.message);
+                    ctx.reply("Berhasil mengunggah foto profil baru");
                     return ctx.scene.enter("meat-menu");
                 })
                 .catch((err) => {
-                    ctx.reply("there was a problem when processing the image that you sent");
+                    ctx.reply("Terjadi suatu masalah pada saat mengunggah foto profil");
                     console.error(err);
                     return ctx.scene.leave();
                 })
@@ -413,15 +413,15 @@ const postNewProfilePictureSection = new WizardScene("post-profile-pic",
 const meatMenuSection = new WizardScene("meat-menu",
     ctx => {
         ctx.reply(
-        `Hello ${ctx.from.first_name}, Selamat datang kembali di OASYS, Apakah yang ingin kamu lakukan?
+        `Halo ${ctx.from.first_name}, Selamat datang kembali di OASYS, Apakah yang ingin kamu lakukan?
 
-        /chngpswd -> ganti password akun saya.
-        /offaccount      -> hapus akun OASYS saya.
+        /gantikatasandi -> ganti katasandi akun saya.
+        /matikanakun      -> hapus akun OASYS saya.
 
-        /profile -> lihat biodata dan foto saya.
-        /poto -> upload foto profile baru.
-        /hp -> input nomor hp baru.
-        /alamat -> input alamat rumah saya.
+        /profil -> lihat biodata dan foto saya.
+        /foto -> unggah foto profil baru.
+        /nomortelepon -> unggah nomor hp baru.
+        /alamat -> unggah alamat rumah saya.
 
         /tanaman -> lihat status tanaman saya.
         /siram -> siram tanaman saya.
@@ -433,27 +433,27 @@ const meatMenuSection = new WizardScene("meat-menu",
 // stage section
 const stage = new Stage([registerSection, mainMenuSection,  waterThePlantSection, getPlantStatusSection, loginSection, meatMenuSection, changePasswordSection, deactiveAccountSection, addPhoneNumberSection, addAddressSection, getProfileInfoSection, postNewProfilePictureSection]);
 stage.command('cancel', (ctx) => {
-    ctx.reply("Operation canceled");
+    ctx.reply("Dibatalkan");
     return ctx.scene.enter("main-menu")
 });
 
-stage.command('register', (ctx) => {
+stage.command('daftar', (ctx) => {
     ctx.scene.enter("register-wizard");
 });
 
-stage.command('login', (ctx) => {
+stage.command('masuk', (ctx) => {
     ctx.scene.enter("login-wizard");
 });
 
-stage.command('chngpswd', (ctx) => {
+stage.command('gantikatasandi', (ctx) => {
     ctx.scene.enter("change-password");
 });
 
-stage.command('offaccount', (ctx) => {
+stage.command('matikanakun', (ctx) => {
     ctx.scene.enter("deactive-account");
 });
 
-stage.command('profile', (ctx) => {
+stage.command('profil', (ctx) => {
     ctx.scene.enter("profile-info");
 });
 
@@ -465,11 +465,11 @@ stage.command('tanaman', (ctx) => {
     ctx.scene.enter("plant-status");
 });
 
-stage.command('poto', (ctx) => {
+stage.command('foto', (ctx) => {
     ctx.scene.enter("post-profile-pic");
 });
 
-stage.command('hp', (ctx) => {
+stage.command('nomortelepon', (ctx) => {
     ctx.scene.enter("phone-number");
 });
 
